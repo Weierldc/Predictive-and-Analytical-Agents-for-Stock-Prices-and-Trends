@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>股票价格预测系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f2f2f2;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label, select, input {
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 30px;
+        }
+        #plot {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>📈 股票价格预测系统</h1>
+
+    <div class="form-group">
+        <label for="ticker">股票代码（如 AAPL、TSLA）:</label><br>
+        <input type="text" id="ticker" placeholder="请输入股票代码" />
+    </div>
+
+    <div class="form-group">
+        <label for="industry">选择行业：</label><br>
+        <select id="industry">
+            <option value="科技">科技</option>
+            <option value="医药">医药</option>
+            <option value="金融">金融</option>
+            <option value="能源">能源</option>
+            <option value="消费">消费</option>
+        </select>
+    </div>
+
+    <button onclick="predict()">开始预测</button>
+    <button onclick="trainModel()">训练模型</button>
+
+    <div id="result"></div>
+    <div id="training-result"></div>
+
+    <script>
+        function predict() {
+            const ticker = document.getElementById('ticker').value.trim().toUpperCase();
+            const industry = document.getElementById('industry').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '⏳ 正在预测，请稍候...';
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ industry, ticker })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP 错误! 状态: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    resultDiv.innerHTML = `<p class="error">❌ 错误: ${data.error}</p>`;
+                    if (data.message) {
+                        resultDiv.innerHTML += `<p class="error">${data.message}</p>`;
+                    }
+                } else {
+                    const imgHtml = `<img id="plot" src="data:image/png;base64,${data.plot_image}" alt="${ticker}股票预测图"/>`;
+
+                    resultDiv.innerHTML = `
+                        <h2>✅ ${ticker} 预测结果 (${industry}行业)</h2>
+                        ${imgHtml}
+                    `;
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                resultDiv.innerHTML = `<p class="error">❌ 请求失败: ${err.message}</p>`;
+            });
+        }
+
+        function trainModel() {
+            const ticker = document.getElementById('ticker').value.trim().toUpperCase();
+            const industry = document.getElementById('industry').value;
+            const resultDiv = document.getElementById('training-result');
+            resultDiv.innerHTML = '⏳ 正在训练模型，请稍候...';
+
+            fetch('/train', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ industry, ticker })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP 错误! 状态: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    resultDiv.innerHTML = `<p class="error">❌ 训练失败: ${data.error}</p>`;
+                } else if (data.warning) {
+                    resultDiv.innerHTML = `
+                        <p class="warning">⚠️ ${data.warning}</p>
+                        <p>${data.message}</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <p>✅ ${data.message}</p>
+                        <p>预测图片路径: ${data.image_path}</p>
+                    `;
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                resultDiv.innerHTML = `<p class="error">❌ 训练请求失败: ${err.message}</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
+
+<iframe
+ src="http://localhost/chatbot/yUCuw67hkhmkJwb2"
+ style="width: 100%; height: 100%; min-height: 700px"
+ frameborder="0"
+ allow="microphone">
+</iframe>
