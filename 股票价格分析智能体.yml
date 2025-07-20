@@ -1,0 +1,303 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 股票价格分析智能体
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/siliconflow:0.0.18@959677bb0c4753407cd1143d5e1548b8de416eb5b38993fcf4630b79d9033e2e
+kind: app
+version: 0.3.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      - document
+      allowed_file_upload_methods:
+      - remote_url
+      - local_file
+      enabled: true
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: parameter-extractor
+      id: 1752479544009-source-1752485652060-target
+      source: '1752479544009'
+      sourceHandle: source
+      target: '1752485652060'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: parameter-extractor
+        targetType: if-else
+      id: 1752485652060-source-1752487939219-target
+      source: '1752485652060'
+      sourceHandle: source
+      target: '1752487939219'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: answer
+      id: 1752487939219-false-1752488040720-target
+      source: '1752487939219'
+      sourceHandle: 'false'
+      target: '1752488040720'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1752487939219-true-1752723313541-target
+      source: '1752487939219'
+      sourceHandle: 'true'
+      target: '1752723313541'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1752723313541-source-1752723442883-target
+      source: '1752723313541'
+      sourceHandle: source
+      target: '1752723442883'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 开始
+        type: start
+        variables: []
+      height: 54
+      id: '1752479544009'
+      position:
+        x: -91.69027357075448
+        y: 511.5372779135733
+      positionAbsolute:
+        x: -91.69027357075448
+        y: 511.5372779135733
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        instruction: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-ai/DeepSeek-R1
+          provider: langgenius/siliconflow/siliconflow
+        parameters:
+        - description: 目标股票所属行业（如：科技、医药、金融、能源、消费)
+          name: industry_arg
+          required: false
+          type: string
+        - description: 目标公司的股票代码（如：GOOGL, AAPL, JNJ)
+          name: ticker_arg
+          required: false
+          type: string
+        - description: 用户提供的与目标股票或行业相关的最新新闻文本。
+          name: news_text
+          required: false
+          type: string
+        query:
+        - sys
+        - query
+        reasoning_mode: prompt
+        selected: false
+        title: 参数提取器
+        type: parameter-extractor
+        variables: []
+        vision:
+          enabled: false
+      height: 90
+      id: '1752485652060'
+      position:
+        x: 311.5247182191924
+        y: 505.71472091810745
+      positionAbsolute:
+        x: 311.5247182191924
+        y: 505.71472091810745
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: not empty
+            id: 698fdbe8-0c01-4fc9-a31d-dc544ff0f8a1
+            value: 不为空
+            varType: string
+            variable_selector:
+            - '1752485652060'
+            - industry_arg
+          - comparison_operator: not empty
+            id: 344f3d74-8c38-4d55-99fa-8d81d36fb541
+            value: 不为空
+            varType: string
+            variable_selector:
+            - '1752485652060'
+            - ticker_arg
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: 条件分支
+        type: if-else
+      height: 152
+      id: '1752487939219'
+      position:
+        x: 713.1687052927439
+        y: 478.3151626517242
+      positionAbsolute:
+        x: 713.1687052927439
+        y: 478.3151626517242
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: 对不起，您输入的内容我无法进行分析
+        desc: ''
+        selected: false
+        title: 直接回复 2
+        type: answer
+        variables: []
+      height: 102
+      id: '1752488040720'
+      position:
+        x: 1048.5346036272515
+        y: 712.7215577152607
+      positionAbsolute:
+        x: 1048.5346036272515
+        y: 712.7215577152607
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-ai/DeepSeek-R1
+          provider: langgenius/siliconflow/siliconflow
+        prompt_template:
+        - id: 54d77029-beb7-4f5c-8108-04724d2ee7e9
+          role: system
+          text: 你是一个股票新闻分析师，请根据股票名称{{#1752485652060.ticker_arg#}}，股票所属行业{{#1752485652060.industry_arg#}}，该股票的新闻{{#1752485652060.news_text#}}，生成一份关于这个股票的新闻报告
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 90
+      id: '1752723313541'
+      position:
+        x: 1048.5346036272515
+        y: 478.3151626517242
+      positionAbsolute:
+        x: 1048.5346036272515
+        y: 478.3151626517242
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1752723313541.text#}}'
+        desc: ''
+        selected: false
+        title: 直接回复 2
+        type: answer
+        variables: []
+      height: 105
+      id: '1752723442883'
+      position:
+        x: 1365.3210641515636
+        y: 478.3151626517242
+      positionAbsolute:
+        x: 1365.3210641515636
+        y: 478.3151626517242
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 152.36592780226658
+      y: 122.9243995409073
+      zoom: 0.41489261024968166
