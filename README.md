@@ -1,4 +1,4 @@
-# Predictive-and-Analytical-Agents-for-Stock-Prices-and-Trends股票价格与趋势预测分析智能体
+# Predictive-and-Analytical-Agents-for-Stock-Prices-and-Trends 股票价格与趋势预测分析智能体
 
 ### 免责声明：本项目由大连理工大学软件学院张桐宇同学毕业设计改编而来，不作任何商业用途，侵权联删，学长勿怪，狗头保命
 <img width="474" height="296" alt="image" src="https://github.com/user-attachments/assets/3aee5c39-4902-4643-9bc6-1aeabcf07d79" />
